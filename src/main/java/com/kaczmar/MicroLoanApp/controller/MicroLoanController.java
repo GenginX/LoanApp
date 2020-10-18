@@ -1,15 +1,13 @@
 package com.kaczmar.MicroLoanApp.controller;
 
-import com.kaczmar.MicroLoanApp.OwnExceptions.AmountNotInRangeException;
-import com.kaczmar.MicroLoanApp.OwnExceptions.DateNotInRangeException;
-import com.kaczmar.MicroLoanApp.OwnExceptions.TimeAndAmountException;
+import com.kaczmar.MicroLoanApp.exceptions.AmountNotInRangeException;
+import com.kaczmar.MicroLoanApp.exceptions.DateNotInRangeException;
+import com.kaczmar.MicroLoanApp.exceptions.TimeAndAmountException;
 import com.kaczmar.MicroLoanApp.dto.LoanInput;
 import com.kaczmar.MicroLoanApp.service.MicroLoanService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalTime;
 
 @RestController
 @RequestMapping(MicroLoanController.LOAN)

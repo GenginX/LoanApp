@@ -1,4 +1,4 @@
-package com.kaczmar.MicroLoanApp.OwnExceptions;
+package com.kaczmar.MicroLoanApp.exceptions;
 
 
 public class TimeAndAmountException extends Exception {

@@ -1,8 +1,8 @@
 package com.kaczmar.MicroLoanApp.service;
 
-import com.kaczmar.MicroLoanApp.OwnExceptions.AmountNotInRangeException;
-import com.kaczmar.MicroLoanApp.OwnExceptions.DateNotInRangeException;
-import com.kaczmar.MicroLoanApp.OwnExceptions.TimeAndAmountException;
+import com.kaczmar.MicroLoanApp.exceptions.AmountNotInRangeException;
+import com.kaczmar.MicroLoanApp.exceptions.DateNotInRangeException;
+import com.kaczmar.MicroLoanApp.exceptions.TimeAndAmountException;
 import com.kaczmar.MicroLoanApp.dto.LoanEntity;
 import com.kaczmar.MicroLoanApp.dto.LoanInput;
 import com.kaczmar.MicroLoanApp.dto.LoanUserView;
