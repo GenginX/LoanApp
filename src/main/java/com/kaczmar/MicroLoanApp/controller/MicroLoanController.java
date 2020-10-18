@@ -7,10 +7,7 @@ import com.kaczmar.MicroLoanApp.dto.LoanInput;
 import com.kaczmar.MicroLoanApp.service.MicroLoanService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/loan")
@@ -25,6 +22,14 @@ public class MicroLoanController {
     @PostMapping
     private ResponseEntity<String> applyForLoan(@RequestBody LoanInput loan) throws AmountNotInRangeException, TimeAndAmountException, DateNotInRangeException {
         String s = microLoanService.applyForLoan(loan);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(s);
+    }
+
+    @PostMapping("/{id}")
+    private ResponseEntity<String> extendLoan(@PathVariable("id") Long id) throws DateNotInRangeException {
+        String s = microLoanService.extendLaon(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(s);

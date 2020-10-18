@@ -13,6 +13,8 @@ public class LoanUserView {
 
     private LocalDate dateOfRequest;
 
+    private LocalDate dateOfRepayment;
+
     private BigDecimal requestedAmount;
 
     private BigDecimal totalCost;
@@ -21,7 +23,8 @@ public class LoanUserView {
 
     @Override
     public String toString() {
-        return "dateOfRequest=" + dateOfRequest +
+        return "\n dateOfRequest=" + dateOfRequest +
+                "\n dateOfRepayment" + dateOfRepayment +
                 "\n requestedAmount=" + requestedAmount +
                 "\n totalCost=" + totalCost +
                 "\n period=" + period.getYears() + " years, " + period.getMonths() + " months, " + period.getDays() + " days";

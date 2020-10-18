@@ -34,15 +34,15 @@ public class MicroLoanService {
 
     public String applyForLoan(LoanInput loanInput) throws AmountNotInRangeException, DateNotInRangeException, TimeAndAmountException {
         BigDecimal amount = loanInput.getAmount();
-        LocalDate date = LocalDate.parse(loanInput.getDate());
+        LocalDate requestedDateOfRepayment = LocalDate.parse(loanInput.getDate());
         LocalTime currentTime = LocalTime.now();
 
-        validationAmountTermTime(loanInput, amount, date, currentTime);
+        validationAmountTermTime(loanInput, amount, requestedDateOfRepayment, currentTime);
 
         BigDecimal totalCost = principalCalculation(amount, loanRequirements).add(amount);
-        Period period = repaymentPeriod(date);
+        Period period = repaymentPeriod(requestedDateOfRepayment);
 
-        LoanEntity entityInDB = createEntityInDB(amount, date, totalCost, period);
+        LoanEntity entityInDB = saveEntityInDB(amount, requestedDateOfRepayment, totalCost, period);
         LoanUserView userView = createUserView(entityInDB);
 
         return createResponse(userView);
@@ -52,6 +52,7 @@ public class MicroLoanService {
     private LoanUserView createUserView(LoanEntity entityInDB) {
         return LoanUserView.builder()
                 .dateOfRequest(entityInDB.getDateOfRequest())
+                .dateOfRepayment(entityInDB.getDateOfRepayment())
                 .period(entityInDB.getPeriod())
                 .requestedAmount(entityInDB.getRequestedAmount())
                 .totalCost(entityInDB.getTotalCost())
@@ -59,9 +60,10 @@ public class MicroLoanService {
 
     }
 
-    private LoanEntity createEntityInDB(BigDecimal amount, LocalDate date, BigDecimal totalCost, Period period) {
+    private LoanEntity saveEntityInDB(BigDecimal amount, LocalDate date, BigDecimal totalCost, Period period) {
         LoanEntity loanEntity = LoanEntity.builder()
-                .dateOfRequest(date)
+                .dateOfRepayment(date)
+                .dateOfRequest(LocalDate.now())
                 .requestedAmount(amount)
                 .totalCost(totalCost)
                 .period(period)
@@ -107,6 +109,26 @@ public class MicroLoanService {
         return Period.between(LocalDate.now(), providedDate);
     }
 
+    public String extendLaon(Long id) throws DateNotInRangeException {
+        LoanEntity one = microLoanRepository.getOne(id);
+        LocalDate newDateOfRepayment = one.getDateOfRepayment().plusYears(loanRequirements.getMaxYearExtension());
+
+        isTermValid(newDateOfRepayment, loanRequirements);
+
+        LoanEntity loanExtended = updateLoan(one, newDateOfRepayment);
+        LoanUserView userView = createUserView(loanExtended);
+
+        return createResponse(userView);
+
+    }
+
+    private LoanEntity updateLoan(LoanEntity one, LocalDate newDateOfRepayment) {
+        Period newPeriod = repaymentPeriod(newDateOfRepayment);
+        one.setDateOfRepayment(newDateOfRepayment);
+        one.setPeriod(newPeriod);
+        microLoanRepository.save(one);
+        return one;
+    }
 
 
 }

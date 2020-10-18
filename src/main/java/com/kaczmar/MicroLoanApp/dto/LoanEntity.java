@@ -26,6 +26,8 @@ public class LoanEntity {
 
     private LocalDate dateOfRequest;
 
+    private LocalDate dateOfRepayment;
+
     private BigDecimal requestedAmount;
 
     private BigDecimal totalCost;
