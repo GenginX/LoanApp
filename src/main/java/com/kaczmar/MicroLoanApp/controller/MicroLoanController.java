@@ -9,10 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalTime;
+
 @RestController
-@RequestMapping("/loan")
+@RequestMapping(MicroLoanController.LOAN)
 public class MicroLoanController {
 
+    public static final String LOAN = "/loan";
     private MicroLoanService microLoanService;
 
     public MicroLoanController(MicroLoanService microLoanService) {

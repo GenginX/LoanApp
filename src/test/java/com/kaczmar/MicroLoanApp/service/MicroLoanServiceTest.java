@@ -18,6 +18,7 @@ import org.junit.jupiter.api.function.Executable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,6 +46,7 @@ class MicroLoanServiceTest {
         //given
         LoanInput loanInput = new LoanInput(new BigDecimal(50000), "2030-12-19");
         LocalDate loanDateNow = LocalDate.now();
+        LocalTime localTimeNow = LocalTime.now();
         //when
         microLoanService.applyForLoan(loanInput);
         //then
@@ -61,6 +63,7 @@ class MicroLoanServiceTest {
     public void isLoanExtended() throws AmountNotInRangeException, TimeAndAmountException, DateNotInRangeException {
         //given
         LoanInput loanInput = new LoanInput(new BigDecimal(50000), "2030-12-19");
+        LocalTime localTimeNow = LocalTime.now();
         microLoanService.applyForLoan(loanInput);
         List<LoanEntity> noExtendedLoans = microLoanRepository.findAll();
         BigDecimal totalCostOnBeggining = noExtendedLoans.get(0).getTotalCost();
@@ -80,6 +83,7 @@ class MicroLoanServiceTest {
     public void isApplyForLoanCreatedUnHappyPathAmount() {
         //given
         LoanInput loanInput = new LoanInput(new BigDecimal(1), "2030-12-19");
+        LocalTime localTimeNow = LocalTime.now();
         //when
         Executable executable = () -> microLoanService.applyForLoan(loanInput);
         //then
@@ -94,5 +98,15 @@ class MicroLoanServiceTest {
         Executable executable = () -> microLoanService.applyForLoan(loanInput);
         //then
         assertThrows(DateNotInRangeException.class, executable);
+    }
+    @Test
+    public void isApplyForLoanCreatedUnHappyPAthDateTimeAndAmount(){
+        //given
+        LoanInput loanInput = new LoanInput(new BigDecimal(1000000), "2035-12-19");
+        loanInput.setLocalTimeNow(LocalTime.of(3,0));
+        //when
+        Executable executable = () -> microLoanService.applyForLoan(loanInput);
+        //then
+        assertThrows(TimeAndAmountException.class, executable);
     }
 }

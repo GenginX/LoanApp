@@ -34,7 +34,7 @@ public class MicroLoanService {
     public String applyForLoan(LoanInput loanInput) throws AmountNotInRangeException, DateNotInRangeException, TimeAndAmountException {
         BigDecimal amount = loanInput.getAmount();
         LocalDate requestedDateOfRepayment = LocalDate.parse(loanInput.getDate());
-        LocalTime currentTime = LocalTime.now();
+        LocalTime currentTime = loanInput.getLocalTimeNow();
 
         validationAmountTermTime(loanInput, amount, requestedDateOfRepayment, currentTime);
 
@@ -45,7 +45,6 @@ public class MicroLoanService {
         LoanUserView userView = createUserView(entityInDB);
 
         return createResponse(userView);
-
     }
 
     private LoanUserView createUserView(LoanEntity entityInDB) {
@@ -56,7 +55,6 @@ public class MicroLoanService {
                 .requestedAmount(entityInDB.getRequestedAmount())
                 .totalCost(entityInDB.getTotalCost())
                 .build();
-
     }
 
     private LoanEntity saveEntityInDB(BigDecimal amount, LocalDate date, BigDecimal totalCost, Period period) {
@@ -69,7 +67,6 @@ public class MicroLoanService {
                 .build();
         microLoanRepository.save(loanEntity);
         return loanEntity;
-
     }
 
     private String createResponse(LoanUserView userView) {
@@ -118,7 +115,6 @@ public class MicroLoanService {
         LoanUserView userView = createUserView(loanExtended);
 
         return createResponse(userView);
-
     }
 
     private LoanEntity updateLoan(LoanEntity one, LocalDate newDateOfRepayment) {
@@ -128,6 +124,4 @@ public class MicroLoanService {
         microLoanRepository.save(one);
         return one;
     }
-
-
 }
