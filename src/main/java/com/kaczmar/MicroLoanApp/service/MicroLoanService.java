@@ -20,9 +20,9 @@ import java.time.Period;
 public class MicroLoanService {
 
 
-    public static final String AMOUNT_IS_NOT_IN_OUR_RANGE = "APPLICATION IS REJECTED AS AMOUNT IS NOT IN OUR RANGE";
-    public static final String DATE_IS_NOT_IN_OUR_RANGE = "APPLICATION IS REJECTED AS DATE IS NOT IN OUR RANGE";
-    public static final String FOR_MAX_AMOUNT_PLEASE_DO_IT_BETWEEN_06_00_24_00 = "YOU ARE REQUESTING FOR MAX AMOUNT, PLEASE DO IT BETWEEN 06:00 - 24:00";
+    private static final String AMOUNT_IS_NOT_IN_OUR_RANGE = "APPLICATION IS REJECTED AS AMOUNT IS NOT IN OUR RANGE";
+    private static final String DATE_IS_NOT_IN_OUR_RANGE = "APPLICATION IS REJECTED AS DATE IS NOT IN OUR RANGE";
+    private static final String FOR_MAX_AMOUNT_PLEASE_DO_IT_BETWEEN_06_00_24_00 = "YOU ARE REQUESTING FOR MAX AMOUNT, PLEASE DO IT BETWEEN 06:00 - 24:00";
     private final MicroLoanRepository microLoanRepository;
     private final LoanRequirements loanRequirements;
 
