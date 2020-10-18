@@ -7,8 +7,8 @@ import org.springframework.context.annotation.PropertySource;
 @SpringBootApplication
 public class MicroLoanAppApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MicroLoanAppApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MicroLoanAppApplication.class, args);
+    }
 
 }

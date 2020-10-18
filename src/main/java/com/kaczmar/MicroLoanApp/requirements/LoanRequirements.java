@@ -38,31 +38,31 @@ public class LoanRequirements {
     @Value("${max_year_extension}")
     private Integer maxYearExtension;
 
-    public BigDecimal getAmountMin(){
+    public BigDecimal getAmountMin() {
         return new BigDecimal(this.amountMin);
     }
 
-    public BigDecimal getAmountMax(){
+    public BigDecimal getAmountMax() {
         return new BigDecimal(this.amountMax);
     }
 
-    public LocalDate getTermMin(){
+    public LocalDate getTermMin() {
         return LocalDate.now().plusYears(termMin.longValue());
     }
 
-    public LocalDate getTermMax(){
+    public LocalDate getTermMax() {
         return LocalDate.now().plusYears(termMax.longValue());
     }
 
-    public LocalTime getTimeMax(){
+    public LocalTime getTimeMax() {
         return LocalTime.of(timeMax, 0);
     }
 
-    public LocalTime getTimeMin(){
+    public LocalTime getTimeMin() {
         return LocalTime.of(timeMin, 0);
     }
 
-    public BigDecimal getPrincipals(){
+    public BigDecimal getPrincipals() {
         return new BigDecimal(this.principals);
     }
 

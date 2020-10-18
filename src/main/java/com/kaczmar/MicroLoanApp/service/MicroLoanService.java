@@ -20,7 +20,6 @@ import java.time.Period;
 public class MicroLoanService {
 
 
-
     public static final String AMOUNT_IS_NOT_IN_OUR_RANGE = "APPLICATION IS REJECTED AS AMOUNT IS NOT IN OUR RANGE";
     public static final String DATE_IS_NOT_IN_OUR_RANGE = "APPLICATION IS REJECTED AS DATE IS NOT IN OUR RANGE";
     public static final String FOR_MAX_AMOUNT_PLEASE_DO_IT_BETWEEN_06_00_24_00 = "YOU ARE REQUESTING FOR MAX AMOUNT, PLEASE DO IT BETWEEN 06:00 - 24:00";
@@ -84,28 +83,28 @@ public class MicroLoanService {
     }
 
     private void isTimeValid(LoanInput loanInput, LocalTime currentTime, LoanRequirements loanRequirements) throws TimeAndAmountException {
-        if((!currentTime.isAfter(loanRequirements.getTimeMin()) || !currentTime.isBefore(loanRequirements.getTimeMax())) && loanInput.getAmount().compareTo(loanRequirements.getAmountMax()) == 0){
+        if ((!currentTime.isAfter(loanRequirements.getTimeMin()) || !currentTime.isBefore(loanRequirements.getTimeMax())) && loanInput.getAmount().compareTo(loanRequirements.getAmountMax()) == 0) {
             throw new TimeAndAmountException(FOR_MAX_AMOUNT_PLEASE_DO_IT_BETWEEN_06_00_24_00);
         }
     }
 
     private void isTermValid(LocalDate date, LoanRequirements loanRequirements) throws DateNotInRangeException {
-        if(!date.isAfter(loanRequirements.getTermMin()) || !date.isBefore(loanRequirements.getTermMax())){
+        if (!date.isAfter(loanRequirements.getTermMin()) || !date.isBefore(loanRequirements.getTermMax())) {
             throw new DateNotInRangeException(DATE_IS_NOT_IN_OUR_RANGE);
         }
     }
 
     private void isAmountValid(BigDecimal amount, LoanRequirements loanRequirements) throws AmountNotInRangeException {
-        if(!(amount.compareTo(loanRequirements.getAmountMin()) >= 0) || !(amount.compareTo(loanRequirements.getAmountMax()) <= 0)){
+        if (!(amount.compareTo(loanRequirements.getAmountMin()) >= 0) || !(amount.compareTo(loanRequirements.getAmountMax()) <= 0)) {
             throw new AmountNotInRangeException(AMOUNT_IS_NOT_IN_OUR_RANGE);
         }
     }
 
-    private BigDecimal principalCalculation(BigDecimal amount, LoanRequirements loanRequirements){
+    private BigDecimal principalCalculation(BigDecimal amount, LoanRequirements loanRequirements) {
         return amount.multiply(loanRequirements.getPrincipals()).divide(BigDecimal.valueOf(100), RoundingMode.UP);
     }
 
-    private Period repaymentPeriod(LocalDate providedDate){
+    private Period repaymentPeriod(LocalDate providedDate) {
         return Period.between(LocalDate.now(), providedDate);
     }
 

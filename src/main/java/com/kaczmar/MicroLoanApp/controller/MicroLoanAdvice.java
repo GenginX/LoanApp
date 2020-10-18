@@ -8,27 +8,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.Date;
 
 @ControllerAdvice
 public class MicroLoanAdvice {
 
     @ExceptionHandler(AmountNotInRangeException.class)
-    public ResponseEntity<String> handleAmountNotInRangeException(AmountNotInRangeException e){
+    public ResponseEntity<String> handleAmountNotInRangeException(AmountNotInRangeException e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_ACCEPTABLE)
                 .body(e.getMessage());
     }
 
     @ExceptionHandler(DateNotInRangeException.class)
-    public ResponseEntity<String> handleDateNotInRangeException(DateNotInRangeException e){
+    public ResponseEntity<String> handleDateNotInRangeException(DateNotInRangeException e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_ACCEPTABLE)
                 .body(e.getMessage());
     }
 
     @ExceptionHandler(TimeAndAmountException.class)
-    public ResponseEntity<String> handleTimeAndAmountException(TimeAndAmountException e){
+    public ResponseEntity<String> handleTimeAndAmountException(TimeAndAmountException e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_ACCEPTABLE)
                 .body(e.getMessage());
