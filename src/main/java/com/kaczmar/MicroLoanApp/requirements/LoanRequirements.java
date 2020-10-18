@@ -32,6 +32,12 @@ public class LoanRequirements {
     @Value("${time.min}")
     private Integer timeMin;
 
+    @Value("${principals}")
+    private Integer principals;
+
+    @Value("${max_year_extension}")
+    private Integer maxYearExtension;
+
     public BigDecimal getAmountMin(){
         return new BigDecimal(this.amountMin);
     }
@@ -56,5 +62,11 @@ public class LoanRequirements {
         return LocalTime.of(timeMin, 0);
     }
 
+    public BigDecimal getPrincipals(){
+        return new BigDecimal(this.principals);
+    }
 
+    public Integer getMaxYearExtension() {
+        return maxYearExtension;
+    }
 }

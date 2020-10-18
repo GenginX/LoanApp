@@ -3,24 +3,32 @@ package com.kaczmar.MicroLoanApp.service;
 import com.kaczmar.MicroLoanApp.OwnExceptions.AmountNotInRangeException;
 import com.kaczmar.MicroLoanApp.OwnExceptions.DateNotInRangeException;
 import com.kaczmar.MicroLoanApp.OwnExceptions.TimeAndAmountException;
+import com.kaczmar.MicroLoanApp.dto.LoanEntity;
 import com.kaczmar.MicroLoanApp.dto.LoanInput;
+import com.kaczmar.MicroLoanApp.dto.LoanUserView;
+import com.kaczmar.MicroLoanApp.repository.MicroLoanRepository;
 import com.kaczmar.MicroLoanApp.requirements.LoanRequirements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Period;
 
 @Service
 public class MicroLoanService {
 
+
+
     public static final String AMOUNT_IS_NOT_IN_OUR_RANGE = "APPLICATION IS REJECTED AS AMOUNT IS NOT IN OUR RANGE";
     public static final String DATE_IS_NOT_IN_OUR_RANGE = "APPLICATION IS REJECTED AS DATE IS NOT IN OUR RANGE";
     public static final String FOR_MAX_AMOUNT_PLEASE_DO_IT_BETWEEN_06_00_24_00 = "YOU ARE REQUESTING FOR MAX AMOUNT, PLEASE DO IT BETWEEN 06:00 - 24:00";
+    private final MicroLoanRepository microLoanRepository;
     private final LoanRequirements loanRequirements;
 
-    public MicroLoanService(LoanRequirements loanRequirements) {
+    public MicroLoanService(MicroLoanRepository microLoanRepository, LoanRequirements loanRequirements) {
+        this.microLoanRepository = microLoanRepository;
         this.loanRequirements = loanRequirements;
     }
 
@@ -29,12 +37,48 @@ public class MicroLoanService {
         LocalDate date = LocalDate.parse(loanInput.getDate());
         LocalTime currentTime = LocalTime.now();
 
+        validationAmountTermTime(loanInput, amount, date, currentTime);
+
+        BigDecimal totalCost = principalCalculation(amount, loanRequirements).add(amount);
+        Period period = repaymentPeriod(date);
+
+        LoanEntity entityInDB = createEntityInDB(amount, date, totalCost, period);
+        LoanUserView userView = createUserView(entityInDB);
+
+        return createResponse(userView);
+
+    }
+
+    private LoanUserView createUserView(LoanEntity entityInDB) {
+        return LoanUserView.builder()
+                .dateOfRequest(entityInDB.getDateOfRequest())
+                .period(entityInDB.getPeriod())
+                .requestedAmount(entityInDB.getRequestedAmount())
+                .totalCost(entityInDB.getTotalCost())
+                .build();
+
+    }
+
+    private LoanEntity createEntityInDB(BigDecimal amount, LocalDate date, BigDecimal totalCost, Period period) {
+        LoanEntity loanEntity = LoanEntity.builder()
+                .dateOfRequest(date)
+                .requestedAmount(amount)
+                .totalCost(totalCost)
+                .period(period)
+                .build();
+        microLoanRepository.save(loanEntity);
+        return loanEntity;
+
+    }
+
+    private String createResponse(LoanUserView userView) {
+        return "We approve this Loan:\n" + userView.toString();
+    }
+
+    private void validationAmountTermTime(LoanInput loanInput, BigDecimal amount, LocalDate date, LocalTime currentTime) throws AmountNotInRangeException, DateNotInRangeException, TimeAndAmountException {
         isAmountValid(amount, loanRequirements);
         isTermValid(date, loanRequirements);
         isTimeValid(loanInput, currentTime, loanRequirements);
-
-        return "We approve this Loan";
-
     }
 
     private void isTimeValid(LoanInput loanInput, LocalTime currentTime, LoanRequirements loanRequirements) throws TimeAndAmountException {
@@ -54,6 +98,15 @@ public class MicroLoanService {
             throw new AmountNotInRangeException(AMOUNT_IS_NOT_IN_OUR_RANGE);
         }
     }
+
+    private BigDecimal principalCalculation(BigDecimal amount, LoanRequirements loanRequirements){
+        return amount.multiply(loanRequirements.getPrincipals()).divide(BigDecimal.valueOf(100), RoundingMode.UP);
+    }
+
+    private Period repaymentPeriod(LocalDate providedDate){
+        return Period.between(LocalDate.now(), providedDate);
+    }
+
 
 
 }
